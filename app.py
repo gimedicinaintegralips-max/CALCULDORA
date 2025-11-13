@@ -249,13 +249,14 @@ st.markdown("""
             line-height: 1.3rem;
         }
     </style>
-st.markdown("<div class='footer'>© 2025 Novumed Salud SAS. Todos los derechos reservados.</div>", unsafe_allow_html=True)
+© 2025 Novumed Salud SAS. Todos los derechos reservados.
     <div class="aviso-container">
         <p class="mejora">ℹ️ Esta calculadora es susceptible a mejoramiento, si usted encuentra alguna inconsitencia en el calculo  por favor notifíquelo al área responsable del diseño coord-gestioninformacion@novumedips.com.</p>
         <p class="confidencial">⚠️ Aviso de uso confidencial:</p>
         <p class="texto">Está destinado exclusivamente para uso institucional y bajo las políticas de privacidad y seguridad de la compañia . Cualquier divulgación, copia o uso no autorizado está estrictamente prohibido.</p>
     </div>
 """, unsafe_allow_html=True)
- st.markdown("<div class='footer'>© 2025 Generador de Actas • Streamlit + Gemini + JSONBin</div>", unsafe_allow_html=True)
+ 
+
 
 
