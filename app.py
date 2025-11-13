@@ -87,13 +87,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
  
-import streamlit as st
-import base64
-import os
- 
 # ======================================
 # ENCABEZADO CON LOGO Y TÍTULO CENTRADO
 # ======================================
+ 
 logo_path = "Logo/logop.png"
 if os.path.exists(logo_path):
     with open(logo_path, "rb") as f:
@@ -108,8 +105,6 @@ if os.path.exists(logo_path):
 )
 else:
     st.title("🖩 calculadora")
- 
- 
 # ======================================
 # LAYOUT PRINCIPAL
 # ======================================
@@ -122,25 +117,32 @@ with col_form:
     st.subheader("🔢 📌calculadora ")
  
     tipo = st.selectbox("Tipo:", ["Tableta 💊", "Ampolla 💉"])
-    frecuencia = st.number_input("Frecuencia (horas):", min_value=1, max_value=24, value=8)
-    duracion = st.number_input("Duración (días):", min_value=1, max_value=120, value=1)
- 
-    # ✅ Fecha local ajustada a zona horaria de Colombia
-    zona_colombia = pytz.timezone("America/Bogota")
-    fecha_local = datetime.now(zona_colombia).date()
-    fecha_orden = st.date_input("Fecha de orden:", fecha_local)
- 
-    inicio_mismo_dia = st.checkbox("Inicia el mismo día", value=True)
-    st.caption("Si no marca Check, inicia el día siguiente.")
+   
  
     st.divider()
  
     if tipo == "Tableta 💊":
         dosis_toma = st.number_input("Dosis por toma (tabletas):", min_value=0.25, step=0.25, value=1.0)
+        frecuencia = st.number_input("Frecuencia (horas):", min_value=1, max_value=24, value=8)
+        duracion = st.number_input("Duración (días):", min_value=1, max_value=120, value=1)
+        # ✅ Fecha local ajustada a zona horaria de Colombia
+        zona_colombia = pytz.timezone("America/Bogota")
+        fecha_local = datetime.now(zona_colombia).date()
+        fecha_orden = st.date_input("Fecha de orden:", fecha_local)
+        inicio_mismo_dia = st.checkbox("Inicia el mismo día", value=True)
+        st.caption("Si no marca Check, inicia el día siguiente.")
         unidades_presentacion = st.number_input("Unidades por caja:", min_value=1, step=1, value=30)
         calcular = st.button("🧮 Calcular Tabletas", use_container_width=True)
     else:
         dosis_inyeccion = st.number_input("Dosis por inyección (ml):", min_value=0.1, step=0.1, value=1.0)
+        frecuencia = st.number_input("Frecuencia (horas):", min_value=1, max_value=24, value=8)
+        duracion = st.number_input("Duración (días):", min_value=1, max_value=120, value=1)
+        # ✅ Fecha local ajustada a zona horaria de Colombia
+        zona_colombia = pytz.timezone("America/Bogota")
+        fecha_local = datetime.now(zona_colombia).date()
+        fecha_orden = st.date_input("Fecha de orden:", fecha_local)
+        inicio_mismo_dia = st.checkbox("Inicia el mismo día", value=True)
+        st.caption("Si no marca Check, inicia el día siguiente.")
         volumen_ampolla = st.number_input("Presentacion por ampolla (ml):", min_value=0.5, step=0.5, value=1.0)
         calcular = st.button("🧮 Calcular Ampollas", use_container_width=True)
  
@@ -159,7 +161,7 @@ with col_result:
         colB.metric("Tabletas", resultados["Total de tabletas"])
         colC.metric("Presentaciones", resultados["Presentaciones necesarias"])
  
-        st.caption("📆 Distribución mensual:")
+        st.caption("📆 Distribución mensual por periodo para descargar:")
  
         fecha_inicio = datetime.strptime(resultados["Fecha de inicio"], "%Y-%m-%d").date()
         if fecha_inicio.month != fecha_orden.month:
@@ -182,7 +184,7 @@ with col_result:
         colA.metric("Inyecciones ", resultados["Total de inyecciones"])
         colB.metric("Ampollas utilizadas", resultados["Ampollas necesarias"])
  
-        st.caption("📆 Distribución mensual:")
+        st.caption("📆 Distribución mensual por periodo para descargar:")
  
         fecha_inicio = datetime.strptime(resultados["Fecha de inicio"], "%Y-%m-%d").date()
         if fecha_inicio.month != fecha_orden.month:
@@ -196,6 +198,24 @@ with col_result:
                 <strong>📌 Próximo mes:</strong> {resultados['Ampollas próximo mes']} ampollas  
             </div>
         """, unsafe_allow_html=True)
+# ======================================
+# DESCARGA DE INSTRUCTIVO
+# ======================================
+st.markdown("### 📘 Instructivo de Uso")
+ 
+instructivo_path = "Instructivo/Instructivo.pdf"
+ 
+if os.path.exists(instructivo_path):
+    with open(instructivo_path, "rb") as pdf_file:
+        st.download_button(
+            label="💾 Descargar Instructivo (PDF)",
+            data=pdf_file,
+            file_name="Instructivo.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
+else:
+    st.warning("📄 No se encontró el archivo **Instructivo.pdf** en la carpeta 'Instructivo'.")
  
  
 # ======================================
@@ -236,6 +256,4 @@ st.markdown("""
         <p class="texto">Está destinado exclusivamente para uso institucional y bajo las políticas de privacidad y seguridad de la compañia . Cualquier divulgación, copia o uso no autorizado está estrictamente prohibido.</p>
     </div>
 """, unsafe_allow_html=True)
-
-
-
+ 
