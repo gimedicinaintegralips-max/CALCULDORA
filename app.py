@@ -86,7 +86,11 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
+ 
+import streamlit as st
+import base64
+import os
+ 
 # ======================================
 # ENCABEZADO CON LOGO Y TÍTULO CENTRADO
 # ======================================
@@ -103,33 +107,34 @@ if os.path.exists(logo_path):
         unsafe_allow_html=True
 )
 else:
-    st.title("🖩 calculadora"
-    
+    st.title("🖩 calculadora")
+ 
+ 
 # ======================================
 # LAYOUT PRINCIPAL
 # ======================================
 col_form, col_result = st.columns([1.1, 1])
-
+ 
 # ======================================
 # COLUMNA IZQUIERDA — FORMULARIO
 # ======================================
 with col_form:
     st.subheader("🔢 📌calculadora ")
-
+ 
     tipo = st.selectbox("Tipo:", ["Tableta 💊", "Ampolla 💉"])
     frecuencia = st.number_input("Frecuencia (horas):", min_value=1, max_value=24, value=8)
     duracion = st.number_input("Duración (días):", min_value=1, max_value=120, value=1)
-
+ 
     # ✅ Fecha local ajustada a zona horaria de Colombia
     zona_colombia = pytz.timezone("America/Bogota")
     fecha_local = datetime.now(zona_colombia).date()
     fecha_orden = st.date_input("Fecha de orden:", fecha_local)
-
+ 
     inicio_mismo_dia = st.checkbox("Inicia el mismo día", value=True)
     st.caption("Si no marca Check, inicia el día siguiente.")
-
+ 
     st.divider()
-
+ 
     if tipo == "Tableta 💊":
         dosis_toma = st.number_input("Dosis por toma (tabletas):", min_value=0.25, step=0.25, value=1.0)
         unidades_presentacion = st.number_input("Unidades por caja:", min_value=1, step=1, value=30)
@@ -138,28 +143,28 @@ with col_form:
         dosis_inyeccion = st.number_input("Dosis por inyección (ml):", min_value=0.1, step=0.1, value=1.0)
         volumen_ampolla = st.number_input("Presentacion por ampolla (ml):", min_value=0.5, step=0.5, value=1.0)
         calcular = st.button("🧮 Calcular Ampollas", use_container_width=True)
-
+ 
 # ======================================
 # COLUMNA DERECHA — RESULTADOS
 # ======================================
 with col_result:
     st.subheader("📊 Resultados")
-
+ 
     if tipo == "Tableta 💊" and 'calcular' in locals() and calcular:
         resultados = calcular_tabletas(frecuencia, duracion, dosis_toma, unidades_presentacion, fecha_orden, inicio_mismo_dia)
-
+ 
         st.success(f"**Tratamiento:** {resultados['Fecha de inicio']} → {resultados['Fecha de finalización']}")
         colA, colB, colC = st.columns(3)
         colA.metric("Tomas", resultados["Total de tomas"])
         colB.metric("Tabletas", resultados["Total de tabletas"])
         colC.metric("Presentaciones", resultados["Presentaciones necesarias"])
-
+ 
         st.caption("📆 Distribución mensual:")
-
+ 
         fecha_inicio = datetime.strptime(resultados["Fecha de inicio"], "%Y-%m-%d").date()
         if fecha_inicio.month != fecha_orden.month:
             st.warning(f"📌 Nota: La orden inicia en el mes siguiente ({fecha_inicio.strftime('%B')}). Todas las tabletas se asignan a ese mes.")
-
+ 
         st.markdown(f"""
             <div style='background-color:#fff3cd; border-left:6px solid #ffcc00; padding:0.8rem; border-radius:8px; margin-bottom:0.5rem;'>
                 <strong>📌 Este mes:</strong> {resultados['Tabletas este mes']} tabletas
@@ -168,21 +173,21 @@ with col_result:
                 <strong>📌 Próximo mes:</strong> {resultados['Tabletas próximo mes']} tabletas
             </div>
         """, unsafe_allow_html=True)
-
+ 
     elif tipo == "Ampolla 💉" and 'calcular' in locals() and calcular:
         resultados = calcular_ampollas(frecuencia, duracion, dosis_inyeccion, volumen_ampolla, fecha_orden, inicio_mismo_dia)
-
+ 
         st.success(f"**Tratamiento:** {resultados['Fecha de inicio']} → {resultados['Fecha de finalización']}")
         colA, colB, colC = st.columns(3)
         colA.metric("Inyecciones ", resultados["Total de inyecciones"])
         colB.metric("Ampollas utilizadas", resultados["Ampollas necesarias"])
-
+ 
         st.caption("📆 Distribución mensual:")
-
+ 
         fecha_inicio = datetime.strptime(resultados["Fecha de inicio"], "%Y-%m-%d").date()
         if fecha_inicio.month != fecha_orden.month:
             st.warning(f"📌 Nota: La orden inicia en el mes siguiente ({fecha_inicio.strftime('%B')}). Todas las ampollas se asignan a ese mes.")
-
+ 
         st.markdown(f"""
             <div style='background-color:#fff3cd; border-left:6px solid #ffcc00; padding:0.8rem; border-radius:8px; margin-bottom:0.5rem;'>
                 <strong>📌 Este mes:</strong> {resultados['Ampollas este mes']} ampollas  
@@ -191,8 +196,8 @@ with col_result:
                 <strong>📌 Próximo mes:</strong> {resultados['Ampollas próximo mes']} ampollas  
             </div>
         """, unsafe_allow_html=True)
-
-
+ 
+ 
 # ======================================
 # AVISO DE CONFIDENCIALIDAD AL FINAL
 # ======================================
@@ -224,25 +229,13 @@ st.markdown("""
             line-height: 1.3rem;
         }
     </style>
-
+ 
     <div class="aviso-container">
         <p class="mejora">ℹ️ Esta calculadora susceptible a mejoramiento, si usted encuentra alguna inconsitencia en el calculo  por favor notifíquelo al área responsable del diseño.</p>
         <p class="confidencial">⚠️ Aviso de uso confidencial:</p>
         <p class="texto">Está destinado exclusivamente para uso institucional y bajo las políticas de privacidad y seguridad de la compañia . Cualquier divulgación, copia o uso no autorizado está estrictamente prohibido.</p>
     </div>
 """, unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
