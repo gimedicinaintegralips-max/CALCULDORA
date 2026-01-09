@@ -114,7 +114,7 @@ col_form, col_result = st.columns([1.1, 1])
 # COLUMNA IZQUIERDA — FORMULARIO
 # ======================================
 with col_form:
-    st.subheader("🔢 📌calculadora ")
+    st.subheader("🔢 📌calculadora11 ")
  
     tipo = st.selectbox("Tipo:", ["Tableta 💊", "Ampolla 💉"])
    
@@ -257,6 +257,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
  
+
 
 
 
